@@ -7,97 +7,108 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { 
-            --primario: #1e293b; 
+            --primario: #0f172a; 
             --accent: #0284c7;
-            --rojo-claro: #fff5f5; 
-            --borde-rojo: #feb2b2; 
+            --rojo-claro: #fff1f2; 
+            --borde-rojo: #fecdd3; 
         }
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; color: #334155; }
+        body { background-color: #fcfcfc; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #334155; }
         
-        /* Header con el nuevo nombre */
-        .header-app { background: white; padding: 2.5rem 0; border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .brand-title { font-weight: 800; letter-spacing: -1px; color: var(--primario); font-size: 2.2rem; }
-        .search-bar { border-radius: 12px; border: 2px solid #e2e8f0; padding: 14px 20px; font-size: 1.1rem; }
-        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1); }
+        .header-app { background: white; padding: 2rem 0; border-bottom: 1px solid #f1f5f9; }
+        .brand-title { font-weight: 900; letter-spacing: -1.5px; color: var(--primario); font-size: 2.5rem; text-align: center; }
+        
+        .search-container { max-width: 900px; margin: -25px auto 40px auto; }
+        .search-bar { 
+            border-radius: 15px; 
+            border: 1px solid #e2e8f0; 
+            padding: 18px 25px; 
+            font-size: 1.1rem; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.15); outline: none; }
 
-        /* Filas de Inventario */
+        /* Estilo de Listado Horizontal Espacioso */
+        .list-header { 
+            display: flex; 
+            padding: 10px 30px; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            color: #94a3b8; 
+            letter-spacing: 1px;
+        }
+
         .item-row { 
             background: white; 
-            border-radius: 12px; 
-            padding: 24px; 
-            margin-bottom: 12px; 
-            border: 1px solid #e2e8f0;
+            border-radius: 10px; 
+            padding: 20px 30px; 
+            margin-bottom: 8px; 
+            border: 1px solid #f1f5f9;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             transition: all 0.2s ease;
         }
-        .item-row:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+        .item-row:hover { border-color: #e2e8f0; background: #fafafa; }
 
-        /* Estilo para productos sin Stock */
+        /* Sin Stock: Rojo claro minimalista */
         .no-stock { 
             background-color: var(--rojo-claro) !important; 
             border-color: var(--borde-rojo) !important; 
-            opacity: 0.85;
         }
 
-        .info-main { flex: 2; }
-        .info-specs { flex: 2; border-left: 1px solid #f1f5f9; padding-left: 30px; margin-left: 30px; }
-        .info-action { flex: 1; text-align: right; }
+        /* Columnas del Listado */
+        .col-main { flex: 3; }      /* Nombre y Marca */
+        .col-desc { flex: 4; padding: 0 20px; } /* Descripción técnica */
+        .col-stock { flex: 1.5; text-align: center; } /* Cantidad */
+        .col-price { flex: 1.5; text-align: right; } /* Precio */
 
-        .item-name { font-weight: 700; font-size: 1.2rem; color: #0f172a; margin-bottom: 2px; display: block; }
-        .item-brand { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); font-weight: 700; }
-        .item-desc { font-size: 0.9rem; color: #64748b; line-height: 1.4; }
+        .item-name { font-weight: 700; font-size: 1.1rem; color: #1e293b; display: block; }
+        .item-brand { font-size: 0.65rem; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+        .item-desc { font-size: 0.9rem; color: #64748b; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .spec-label { font-size: 0.75rem; color: #94a3b8; font-weight: 600; display: block; text-transform: uppercase; }
-        .spec-value { font-size: 0.95rem; font-weight: 500; color: #475569; }
-
-        .price-text { font-size: 1.5rem; font-weight: 800; color: #0f172a; display: block; margin-bottom: 5px; }
+        .stock-label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .stock-out { color: #be123c; font-weight: 800; }
         
-        /* Etiquetas de Stock */
-        .stock-badge { font-size: 0.7rem; padding: 5px 12px; border-radius: 20px; font-weight: 800; text-transform: uppercase; }
-        .stock-in { background: #dcfce7; color: #166534; }
-        .stock-out { background: #fee2e2; color: #991b1b; }
+        .price-text { font-size: 1.25rem; font-weight: 800; color: #0f172a; }
 
-        .btn-contact { 
-            background: var(--primario); color: white; border-radius: 10px; 
-            padding: 10px 20px; text-decoration: none; font-size: 0.85rem; font-weight: 700;
-            display: inline-block; transition: 0.2s;
-        }
-        .btn-contact:hover { background: #000; color: white; }
-        .btn-contact.disabled { background: #94a3b8; pointer-events: none; opacity: 0.6; }
-
+        /* Adaptabilidad (Responsive) */
         @media (max-width: 992px) {
-            .item-row { flex-direction: column; text-align: center; gap: 20px; }
-            .info-specs { border-left: none; padding-left: 0; margin-left: 0; border-top: 1px solid #f1f5f9; padding-top: 20px; width: 100%; }
-            .info-action { text-align: center; width: 100%; }
+            .list-header { display: none; }
+            .item-row { flex-direction: column; text-align: center; padding: 25px; }
+            .col-desc { padding: 15px 0; width: 100%; border-top: 1px solid #f1f5f9; margin-top: 10px; }
+            .item-desc { white-space: normal; }
+            .col-price { width: 100%; margin-top: 10px; }
         }
     </style>
 </head>
 <body>
 
 <header class="header-app mb-5">
-    <div class="container text-center">
-        <h1 class="brand-title mb-2">FULL CELL CALAMA</h1>
-        <p class="text-muted mb-4 fw-medium">CATÁLOGO DE REPUESTOS Y ACCESORIOS</p>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <input type="text" id="searchInput" class="form-control search-bar shadow-sm" placeholder="Buscar por modelo (ej: iPhone 11), marca o repuesto...">
-            </div>
-        </div>
+    <div class="container">
+        <h1 class="brand-title">FULL CELL CALAMA</h1>
+        <p class="text-center text-muted small fw-bold">LISTADO TÉCNICO DE INVENTARIO</p>
     </div>
 </header>
 
+<div class="container search-container">
+    <input type="text" id="searchInput" class="form-control search-bar" placeholder="🔍 Buscar por repuesto, modelo o marca...">
+</div>
+
 <main class="container mb-5">
+    <div class="list-header d-none d-lg-flex">
+        <div style="flex: 3;">Producto / Marca</div>
+        <div style="flex: 4; padding-left: 20px;">Detalle Técnico</div>
+        <div style="flex: 1.5; text-align: center;">Stock</div>
+        <div style="flex: 1.5; text-align: right;">Precio</div>
+    </div>
+
     <div id="inventoryList">
         </div>
 </main>
 
 <script>
-    // --- CONFIGURACIÓN ---
-    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; // Reemplaza con tu link CSV de Sheets
-    const WHATSAPP = '56945665141'; // Reemplaza con tu número de WhatsApp
-    // --------------------
+    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSs_mhwS-Op3r7iDRB3UZutQc8m5_oe5uDUqHzwbLOmHcsOm6uPtm_nYVQgwb9t1tjIWZ2waAnRlTJA/pub?output=csv'; // <--- PEGA TU LINK CSV AQUÍ
 
     let inventory = [];
 
@@ -114,21 +125,20 @@
                     precio: c[1],
                     desc: c[2],
                     marca: c[3],
-                    stock: parseInt(c[4]) || 0,
-                    nota: c[5]
+                    stock: parseInt(c[4]) || 0
                 };
             }).filter(item => item.nombre && item.nombre.trim() !== "");
 
             render(inventory);
         } catch (e) {
-            console.error("Error al cargar datos:", e);
+            console.error("Error cargando inventario:", e);
         }
     }
 
     function render(list) {
         const container = document.getElementById('inventoryList');
         if (list.length === 0) {
-            container.innerHTML = `<div class="text-center py-5 text-muted"><h4>No se encontraron resultados</h4></div>`;
+            container.innerHTML = `<div class="text-center py-5 text-muted">No hay resultados para su búsqueda</div>`;
             return;
         }
 
@@ -136,31 +146,23 @@
             const hasStock = item.stock > 0;
             return `
                 <div class="item-row ${!hasStock ? 'no-stock' : ''}">
-                    <div class="info-main">
-                        <span class="item-brand">${item.marca || 'DETALLE'}</span>
+                    <div class="col-main">
+                        <span class="item-brand">${item.marca || 'GENÉRICO'}</span>
                         <span class="item-name">${item.nombre}</span>
-                        <p class="item-desc mb-0">${item.desc}</p>
                     </div>
 
-                    <div class="info-specs">
-                        <div class="mb-3">
-                            <span class="spec-label">Disponibilidad</span>
-                            <span class="stock-badge ${hasStock ? 'stock-in' : 'stock-out'}">
-                                ${hasStock ? 'En Stock: ' + item.stock : 'Agotado'}
-                            </span>
-                        </div>
-                        <div>
-                            <span class="spec-label">Garantía / Nota</span>
-                            <span class="spec-value">${item.nota || 'Consultar'}</span>
-                        </div>
+                    <div class="col-desc">
+                        <p class="item-desc">${item.desc || '-'}</p>
                     </div>
 
-                    <div class="info-action">
+                    <div class="col-stock">
+                        <span class="stock-label ${!hasStock ? 'stock-out' : ''}">
+                            ${hasStock ? item.stock + ' UNID' : 'AGOTADO'}
+                        </span>
+                    </div>
+
+                    <div class="col-price">
                         <span class="price-text">${item.precio}</span>
-                        <a href="https://wa.me/${WHATSAPP}?text=Hola Full Cell Calama, consulto por: ${item.nombre}" 
-                           class="btn-contact ${!hasStock ? 'disabled' : ''}">
-                           ${hasStock ? 'SOLICITAR POR WHATSAPP' : 'SIN STOCK'}
-                        </a>
                     </div>
                 </div>
             `;
